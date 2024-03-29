@@ -1,20 +1,59 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.fanduel.grpc.lib";
 
-message EngineContributeRequest {
-  string requestId = 1;
-  double userId = 2;
-  double amount = 3;
-  string transactionRef = 4;
+package beyondplay.contrib.v1;
+
+import "google/protobuf/struct.proto";
+import "google/type/money.proto";
+
+service ContributionService {
+  // Make a single contributions
+  rpc Contribute(ContributeRequest) returns (ContributeResponse);
+
+  // Make a single contribution over a stream using a long-lived connection
+  rpc ContributeStreaming(stream ContributeStreamingRequest) returns (ContributeStreamingResponse);
+
+  // Make multiple pre-queued and pre-sorted contributions
+  rpc ContributeMany(ContributeManyRequest) returns (ContributeManyResponse);
+
+  // Make multiple pre-queued and pre-sorted contributions over a stream using a long-lived connection
+  rpc ContributeManyStreaming(stream ContributeManyStreamingRequest) returns (ContributeManyStreamingResponse);
 }
 
-message EngineContributeResponse {
-  string responseId = 1;
+message ContributeRequest {
+  Contribution data = 1;
 }
 
-service EngineContributeService {
-  rpc Contribute (EngineContributeRequest) returns (EngineContributeResponse) {
-  }
+message ContributeResponse {}
+
+message ContributeStreamingRequest {
+  Contribution data = 1;
+}
+
+message ContributeStreamingResponse {}
+
+message ContributeManyRequest {
+  repeated Contribution data = 1;
+}
+
+message ContributeManyResponse {}
+
+message ContributeManyStreamingRequest {
+  repeated Contribution data = 1;
+}
+
+message ContributeManyStreamingResponse {}
+
+// TODO: player wallet auth token?
+message Contribution {
+  string operator_id = 1;
+  string brand_id = 2;
+  // Contribution source, usually a game
+  string source_id = 3;
+  string player_id = 4;
+  string player_country_id = 5;
+  string gameround_id = 6;
+  google.type.Money base_wager = 7;
+  optional google.protobuf.Struct metadata = 8;
 }
