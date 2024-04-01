@@ -3,18 +3,18 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "com.fanduel.grpc.lib";
 
-message EngineContributeRequest {
+message ContributeRequest {
   string requestId = 1;
   double userId = 2;
   double amount = 3;
   string transactionRef = 4;
 }
 
-message EngineContributeResponse {
+message ContributeResponse {
   string responseId = 1;
 }
 
-service EngineContributeService {
-  rpc Contribute (EngineContributeRequest) returns (EngineContributeResponse) {
+service ContributeService {
+  rpc Contribute (ContributeRequest) returns (ContributeResponse) {
   }
 }
