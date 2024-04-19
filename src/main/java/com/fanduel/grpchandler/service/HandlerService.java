@@ -2,7 +2,7 @@ package com.fanduel.grpchandler.service;
 
 import beyondplay.contrib.v1.Contribute;
 import beyondplay.contrib.v1.Contribute.ContributeRequest;
-import beyondplay.contrib.v1.ContributionServiceGrpc;
+import beyondplay.contrib.v1.ContributionServiceGrpc.ContributionServiceBlockingStub;
 import com.fanduel.grpchandler.model.HandlerRequest;
 import com.google.type.Money;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class HandlerService {
 
     @GrpcClient("contribute")
-    private ContributionServiceGrpc.ContributionServiceBlockingStub contributeService;
+    private ContributionServiceBlockingStub contributeService;
 
     private final Logger logger = LoggerFactory.getLogger(HandlerService.class);
 
@@ -26,7 +26,7 @@ public class HandlerService {
                         .setUnits(request.amount().longValue())
                         .build())
                 .setPlayerId(request.userId().toString())
-                .setRoundId(request.transactionRef())
+                .setRoundId(request.roundRef())
                 .build();
 
         ContributeRequest contributeRequest = ContributeRequest.newBuilder()
