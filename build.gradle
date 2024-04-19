@@ -1,8 +1,8 @@
 buildscript {
     ext {
-        protobufVersion = '3.23.4'
-        protobufPluginVersion = '0.8.18'
         grpcVersion = '1.62.2'
+        protobufVersion = '3.23.4'
+        grpcSpringBootVersion = '3.0.0.RELEASE'
     }
 }
 
@@ -10,7 +10,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.3'
     id 'io.spring.dependency-management' version '1.1.4'
-    id 'com.google.protobuf' version "${protobufPluginVersion}"
+    id 'com.google.protobuf' version '0.8.18'
 }
 
 group = 'com.fanduel'
@@ -29,7 +29,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation "net.devh:grpc-client-spring-boot-starter:3.0.0.RELEASE"
+    implementation "net.devh:grpc-client-spring-boot-starter:${grpcSpringBootVersion}"
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
 
@@ -48,6 +48,16 @@ protobuf {
     generateProtoTasks {
         all()*.plugins {
             grpc {}
+        }
+    }
+}
+
+// Inform IDEs about the gRPC generated code
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
         }
     }
 }

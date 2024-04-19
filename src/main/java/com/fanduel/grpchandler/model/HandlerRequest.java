@@ -2,10 +2,10 @@ package com.fanduel.grpchandler.model;
 
 import java.math.BigDecimal;
 
-public record EngineRequest(
+public record HandlerRequest(
         String requestId,
         Long userId,
         BigDecimal amount,
-        String transactionRef
+        String roundRef
 ) {
 }

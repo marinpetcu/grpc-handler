@@ -1,20 +1,41 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
-option java_package = "com.fanduel.grpc.lib";
+package beyondplay.contrib.v1;
 
+import "google/protobuf/struct.proto";
+import "google/type/money.proto";
+
+// A service for contributing to jackpots from various games
+service ContributionService {
+  // Make a single contribution
+  rpc Contribute(ContributeRequest) returns (ContributeResponse);
+}
+
+// Contribution request containing the contribution payload.
 message ContributeRequest {
-  string requestId = 1;
-  double userId = 2;
-  double amount = 3;
-  string transactionRef = 4;
+  // Single contribution payload.
+  Contribution data = 1;
 }
 
-message ContributeResponse {
-  string responseId = 1;
-}
+// An empty contribution response. Response status code indicates success or failure.
+message ContributeResponse {}
 
-service ContributeService {
-  rpc Contribute (ContributeRequest) returns (ContributeResponse) {
-  }
+// Contribution payload.
+message Contribution {
+  // A top-level organization in the multi-tenant system with its own exclusive jackpot data.
+  string operator_id = 1;
+  // An operator subdivision limiting access to a subset of the jackpot data.
+  string brand_id = 2;
+  // Game identifier used to match the jackpot to contribute to.
+  string game_id = 3;
+  // Player identifier used for wallet withdrawal calls.
+  string player_id = 4;
+  // ISO 3166-2 code used to determine if a jackpot is accessible in a particular jurisdiction.
+  string player_country_subdivision_code = 5;
+  // Game round identifier.
+  string round_id = 6;
+  // Base contribution amount.
+  google.type.Money base_wager = 7;
+  // Metadata to forward with wallet requests and contrib results.
+  optional google.protobuf.Value metadata = 8;
 }
